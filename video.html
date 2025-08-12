@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Video</title>
+  <style>
+    html, body { margin:0; padding:0; height:100%; background:#000; }
+    video { width:100%; height:100%; object-fit:contain; background:#000; }
+  </style>
+</head>
+<body>
+  <script>
+    const p = new URLSearchParams(location.search);
+    const src = p.get('v') || p.get('file');
+    if (!src) {
+      document.body.innerHTML =
+        '<p style="color:#fff;text-align:center;margin-top:24px">לא נמצא סרטון (?v=...)</p>';
+    } else {
+      const v = document.createElement('video');
+      v.src = decodeURIComponent(src);
+      v.autoplay = true;     // ניגון אוטומטי
+      v.muted = true;        // מתחיל מושתק כדי לא להיחסם
+      v.playsInline = true;  // חשוב למובייל
+      v.controls = true;     // מאפשר להדליק סאונד
+      v.loop = true;
+      // קליק על הווידאו – הדלקת סאונד
+      v.addEventListener('click', async () => { v.muted = false; try { await v.play(); } catch(e){} });
+      document.body.appendChild(v);
+      v.play().catch(()=>{});
+    }
+  </script>
+</body>
+</html>
